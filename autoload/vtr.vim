@@ -1,5 +1,4 @@
-" vim-tmux-runner
-
+" vim: fdm=expr:
 let s:vtr_percentage = g:VtrPercentage
 let s:vtr_orientation = g:VtrOrientation
 
@@ -451,4 +450,3 @@ function! s:vtr_send_command(command, ...)
     let ensure_pane = get(a:, 1, 0)
     call vtr#send_command_to_runner(ensure_pane, a:command)
 endfunction
-" vim: set fdm=marker

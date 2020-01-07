@@ -16,7 +16,6 @@ let g:VtrInitialCommand = get(g:, 'VtrInitialCommand', '')
 let g:VtrGitCdUpOnOpen = get(g:, 'VtrGitCdUpOnOpen', 0)
 let g:VtrClearBeforeSend = get(g:, 'VtrClearBeforeSend', 1)
 let g:VtrPrompt = get(g:, 'VtrPrompt', 'Command to run: ')
-let g:VtrUseVtrMaps = get(g:, 'VtrUseVtrMaps', 0)
 let g:VtrClearOnReorient = get(g:, 'VtrClearOnReorient', 1)
 let g:VtrClearOnReattach = get(g:, 'VtrClearOnReattach', 1)
 let g:VtrDetachedName = get(g:, 'VtrDetachedName', 'VTR_Pane')
@@ -40,17 +39,15 @@ command! VtrFlushCommand call vtr#flush_command()
 command! VtrSendCtrlD call vtr#send_ctrl_id()
 command! -bang -nargs=? -bar VtrAttachToPane call vtr#attach_to_pane(<f-args>)
 
-if g:VtrUseVtrMaps
-    nnoremap <leader>va :VtrAttachToPane<cr>
-    nnoremap <leader>ror :VtrReorientRunner<cr>
-    nnoremap <leader>sc :VtrSendCommandToRunner<cr>
-    nnoremap <leader>sl :VtrSendLinesToRunner<cr>
-    vnoremap <leader>sl :VtrSendLinesToRunner<cr>
-    nnoremap <leader>or :VtrOpenRunner<cr>
-    nnoremap <leader>kr :VtrKillRunner<cr>
-    nnoremap <leader>fr :VtrFocusRunner<cr>
-    nnoremap <leader>dr :VtrDetachRunner<cr>
-    nnoremap <leader>cr :VtrClearRunner<cr>
-    nnoremap <leader>fc :VtrFlushCommand<cr>
-    nnoremap <leader>sf :VtrSendFile<cr>
-endif
+nnoremap <Plug>(VtrAttachToPane) :VtrAttachToPane<CR>
+nnoremap <Plug>(VtrReorientRunner) :VtrReorientRunner<CR>
+nnoremap <Plug>(VtrSendCommandToRunner) :VtrSendCommandToRunner<CR>
+nnoremap <Plug>(VtrSendLinesToRunner) :VtrSendLinesToRunner<CR>
+vnoremap <Plug>(VtrSendLinesToRunner) :VtrSendLinesToRunner<CR>
+nnoremap <Plug>(VtrSendFile) :VtrSendFile<CR>
+nnoremap <Plug>(VtrOpenRunner) :VtrOpenRunner<CR>
+nnoremap <Plug>(VtrKillRunner) :VtrKillRunner<CR>
+nnoremap <Plug>(VtrFocusRunner) :VtrFocusRunner<CR>
+nnoremap <Plug>(VtrDetachRunner) :VtrDetachRunner<CR>
+nnoremap <Plug>(VtrClearRunner) :VtrClearRunner<CR>
+nnoremap <Plug>(VtrFlushCommand) :VtrFlushCommand<CR>
