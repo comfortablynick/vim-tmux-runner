@@ -6,6 +6,8 @@
 " License:     MIT
 " Last Change: 2019-12-05
 " ====================================================
+if exists('g:loaded_vtr') | finish | endif
+let g:loaded_vtr = 1
 
 " Init variables
 let g:VtrPercentage = get(g:, 'VtrPercentage', 20)
@@ -26,17 +28,17 @@ let g:VtrAppendNewline = get(g:, 'VtrAppendNewline', 0)
 
 command! -bang -nargs=? VtrSendCommandToRunner call vtr#send_command_to_runner(<bang>0, <f-args>)
 command! -bang -range VtrSendLinesToRunner <line1>,<line2>call vtr#send_lines_to_runner(<bang>0)
-command! -bang VtrSendFile call s:SendFileViaVtr(<bang>0)
-command! -nargs=? VtrOpenRunner call s:EnsureRunnerPane(<args>)
-command! VtrKillRunner call s:KillRunnerPane()
-command! -bang VtrFocusRunner call s:FocusRunnerPane(<bang>!0)
-command! VtrReorientRunner call s:ReorientRunner()
-command! VtrDetachRunner call s:DetachRunnerPane()
-command! VtrReattachRunner call s:ReattachPane()
-command! VtrClearRunner call s:SendClearSequence()
-command! VtrFlushCommand call s:FlushCommand()
-command! VtrSendCtrlD call s:SendCtrlD()
-command! -bang -nargs=? -bar VtrAttachToPane call s:AttachToPane(<f-args>)
+command! -bang VtrSendFile call vtr#send_file_via_vtr(<bang>0)
+command! -nargs=? VtrOpenRunner call vtr#ensure_runner_pane(<args>)
+command! VtrKillRunner call vtr#kill_runner_pane()
+command! -bang VtrFocusRunner call vtr#focus_runner_pane(<bang>!0)
+command! VtrReorientRunner call vtr#reorient_runner()
+command! VtrDetachRunner call vtr#detach_runner_pane()
+command! VtrReattachRunner call vtr#reattach_pane()
+command! VtrClearRunner call vtr#send_clear_sequence()
+command! VtrFlushCommand call vtr#flush_command()
+command! VtrSendCtrlD call vtr#send_ctrl_id()
+command! -bang -nargs=? -bar VtrAttachToPane call vtr#attach_to_pane(<f-args>)
 
 if g:VtrUseVtrMaps
     nnoremap <leader>va :VtrAttachToPane<cr>
