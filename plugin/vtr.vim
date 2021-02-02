@@ -9,6 +9,11 @@
 if exists('g:loaded_vtr') | finish | endif
 let g:loaded_vtr = 1
 
+augroup vim_tmux_runner 
+    autocmd!
+    autocmd QuitPre * call vtr#kill_runner_pane()
+augroup END
+
 " Init variables
 let g:VtrPercentage             = get(g:, 'VtrPercentage', 20)
 let g:VtrOrientation            = get(g:, 'VtrOrientation', 'v')

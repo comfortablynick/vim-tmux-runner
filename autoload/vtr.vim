@@ -117,17 +117,17 @@ function s:tmux_panes()
 endfunction
 
 function s:focus_tmux_pane(pane_number)
-    let targeted_cmd = s:targeted_tmux_command('select-pane', a:pane_number)
-    call s:send_tmux_command(targeted_cmd)
+    let l:targeted_cmd = s:targeted_tmux_command('select-pane', a:pane_number)
+    call s:send_tmux_command(l:targeted_cmd)
 endfunction
 
 function s:runner_pane_dimensions()
-    let panes = s:tmux_panes()
-    for pane in panes
-        if pane =~ '^'.s:runner_pane
-            let pattern = s:runner_pane.': [\(\d\+\)x\(\d\+\)\]'
-            let pane_info =  matchlist(pane, pattern)
-            return {'width': pane_info[1], 'height': pane_info[2]}
+    let l:panes = s:tmux_panes()
+    for l:pane in l:panes
+        if l:pane =~ '^'.s:runner_pane
+            let l:pattern = s:runner_pane.': [\(\d\+\)x\(\d\+\)\]'
+            let l:pane_info =  matchlist(l:pane, l:pattern)
+            return {'width': l:pane_info[1], 'height': l:pane_info[2]}
         endif
     endfor
 endfunction
@@ -145,8 +145,8 @@ function s:strip(string)
 endfunction
 
 function s:send_tmux_command(command)
-    let prefixed_command = 'tmux '.a:command
-    return s:strip(system(prefixed_command))
+    let l:prefixed_command = 'tmux '.a:command
+    return s:strip(system(l:prefixed_command))
 endfunction
 
 function s:targeted_tmux_command(command, target_pane)
@@ -154,14 +154,14 @@ function s:targeted_tmux_command(command, target_pane)
 endfunction
 
 function s:_send_keys(keys)
-    let targeted_cmd = s:targeted_tmux_command('send-keys', s:runner_pane)
-    let full_command = join([targeted_cmd, a:keys])
-    call s:send_tmux_command(full_command)
+    let l:targeted_cmd = s:targeted_tmux_command('send-keys', s:runner_pane)
+    let l:full_command = join([l:targeted_cmd, a:keys])
+    call s:send_tmux_command(l:full_command)
 endfunction
 
 function s:send_keys(keys)
-    let cmd = g:VtrClearBeforeSend ? g:VtrClearSequence.a:keys : a:keys
-    call s:_send_keys(cmd)
+    let l:cmd = g:VtrClearBeforeSend ? g:VtrClearSequence.a:keys : a:keys
+    call s:_send_keys(l:cmd)
     call s:send_enter_sequence()
 endfunction
 
@@ -181,11 +181,11 @@ function s:send_quit_sequence()
 endfunction
 
 function s:git_cd_up()
-    let git_repo_check = 'git rev-parse --git-dir > /dev/null 2>&1'
-    let cdup_cmd = "cd './'$(git rev-parse --show-cdup)"
-    let cmd = shellescape(join([git_repo_check, '&&', cdup_cmd]))
+    let l:git_repo_check = 'git rev-parse --git-dir > /dev/null 2>&1'
+    let l:cdup_cmd = "cd './'$(git rev-parse --show-cdup)"
+    let l:cmd = shellescape(join([l:git_repo_check, '&&', l:cdup_cmd]))
     call s:send_tmux_copy_mode_exit()
-    call s:send_keys(cmd)
+    call s:send_keys(l:cmd)
     call vtr#send_clear_sequence()
 endfunction
 
@@ -202,17 +202,17 @@ function s:toggle_orientation_variable()
 endfunction
 
 function s:break_runner_pane_to_temp_window()
-    let targeted_cmd = s:targeted_tmux_command('break-pane', s:runner_pane)
-    let full_command = join([targeted_cmd, '-d'])
-    call s:send_tmux_command(full_command)
+    let l:targeted_cmd = s:targeted_tmux_command('break-pane', s:runner_pane)
+    let l:full_command = join([l:targeted_cmd, '-d'])
+    call s:send_tmux_command(l:full_command)
     let s:detached_window = s:last_window_number()
     let s:vim_pane = s:active_pane_index()
     unlet s:runner_pane
 endfunction
 
 function s:runner_dimension_spec()
-    let dimensions = join(['-p', s:vtr_percentage, '-'.s:vtr_orientation])
-    return dimensions
+    let l:dimensions = join(['-p', s:vtr_percentage, '-'.s:vtr_orientation])
+    return l:dimensions
 endfunction
 
 function s:tmux_info(message)
@@ -226,8 +226,8 @@ function s:pane_count()
 endfunction
 
 function s:pane_indicies()
-    let index_slicer = 'str2nr(substitute(v:val, "\\v(\\d+):.*", "\\1", ""))'
-    return map(s:tmux_panes(), index_slicer)
+    let l:index_slicer = 'str2nr(substitute(v:val, "\\v(\\d+):.*", "\\1", ""))'
+    return map(s:tmux_panes(), l:index_slicer)
 endfunction
 
 function s:available_runner_pane_indices()
@@ -256,30 +256,30 @@ function s:prompt_for_pane_to_attach()
     if g:VtrDisplayPaneNumbers
         call s:send_tmux_command('source ~/.tmux.conf && tmux display-panes')
     endif
-    echohl String | let desired_pane = input('Pane #: ') | echohl None
+    echohl String | let l:desired_pane = input('Pane #: ') | echohl None
     if !empty('desired_pane')
-        call s:attach_to_specified_pane(desired_pane)
+        call s:attach_to_specified_pane(l:desired_pane)
     else
         call s:echo_error('No pane specified. Cancelling.')
     endif
 endfunction
 
 function s:current_major_orientation()
-    let orientation_map = { '[': 'v', '{': 'h' }
-    let layout = s:tmux_info('window_layout')
-    let outermost_orientation = substitute(layout, '[^[{]', '', 'g')[0]
-    return orientation_map[outermost_orientation]
+    let l:orientation_map = { '[': 'v', '{': 'h' }
+    let l:layout = s:tmux_info('window_layout')
+    let l:outermost_orientation = substitute(l:layout, '[^[{]', '', 'g')[0]
+    return l:orientation_map[l:outermost_orientation]
 endfunction
 
 function s:attach_to_specified_pane(desired_pane)
-    let desired_pane = str2nr(a:desired_pane)
-    if s:validate_runner_pane_number(desired_pane)
-        let s:runner_pane = desired_pane
+    let l:desired_pane = str2nr(a:desired_pane)
+    if s:validate_runner_pane_number(l:desired_pane)
+        let s:runner_pane = l:desired_pane
         let s:vim_pane = s:active_pane_index()
         let s:vtr_orientation = s:current_major_orientation()
-        echohl String | echo "\rRunner pane set to: " . desired_pane | echohl None
+        echohl String | echo "\rRunner pane set to: " . l:desired_pane | echohl None
     else
-        call s:echo_error('Invalid pane number: ' . desired_pane)
+        call s:echo_error('Invalid pane number: ' . l:desired_pane)
     endif
 endfunction
 
@@ -308,9 +308,9 @@ function vtr#reattach_pane()
 endfunction
 
 function s:reattach_pane()
-    let join_cmd = join(['join-pane', '-s', ':'.s:detached_window.'.0',
+    let l:join_cmd = join(['join-pane', '-s', ':'.s:detached_window.'.0',
         \ s:runner_dimension_spec()])
-    call s:send_tmux_command(join_cmd)
+    call s:send_tmux_command(l:join_cmd)
     unlet s:detached_window
     let s:runner_pane = s:active_pane_index()
 endfunction
@@ -327,8 +327,8 @@ function vtr#reorient_runner()
 endfunction
 
 function s:highlighted_prompt(prompt)
-    echohl String | let input = shellescape(input(a:prompt)) | echohl None
-    return input
+    echohl String | let l:input = shellescape(input(a:prompt)) | echohl None
+    return l:input
 endfunction
 
 function vtr#flush_command()
@@ -340,7 +340,7 @@ endfunction
 function s:send_tmux_copy_mode_exit()
     let l:session = s:tmux_info('session_name')
     let l:win = s:tmux_info('window_index')
-    let target_cmd = join([l:session.':'.l:win.'.'.s:runner_pane])
+    let l:target_cmd = join([l:session.':'.l:win.'.'.s:runner_pane])
     if s:send_tmux_command("display-message -p -F '#{pane_in_mode}' -t " . l:target_cmd)
         call s:send_quit_sequence()
     endif
@@ -355,8 +355,8 @@ function vtr#send_command_to_runner(ensure_pane, ...)
     if empty('s:user_command')
         let s:user_command = s:highlighted_prompt(g:VtrPrompt)
     endif
-    let escaped_empty_string = "''"
-    if s:user_command == escaped_empty_string
+    let l:escaped_empty_string = "''"
+    if s:user_command == l:escaped_empty_string
         unlet s:user_command
         call s:echo_error('command string required')
         return
@@ -390,26 +390,26 @@ function vtr#send_lines_to_runner(ensure_pane) range
 endfunction
 
 function s:prepare_lines(lines)
-    let prepared = a:lines
+    let l:prepared = a:lines
     if g:VtrStripLeadingWhitespace
-        let prepared = map(a:lines, 'substitute(v:val,"^\\s*","","")')
+        let l:prepared = map(a:lines, 'substitute(v:val,"^\\s*","","")')
     endif
     if g:VtrClearEmptyLines
-        let prepared = filter(prepared, '!empty(v:val)')
+        let l:prepared = filter(l:prepared, '!empty(v:val)')
     endif
     if g:VtrAppendNewline && len(a:lines) > 1
-        let prepared = add(prepared, "\r")
+        let l:prepared = add(l:prepared, "\r")
     endif
-    return prepared
+    return l:prepared
 endfunction
 
 function s:send_text_to_runner(lines)
     if !s:valid_runner_pane_set() | return | endif
-    let prepared = s:prepare_lines(a:lines)
-    let joined_lines = join(prepared, "\r") . "\r"
-    let send_keys_cmd = s:targeted_tmux_command('send-keys', s:runner_pane)
-    let targeted_cmd = send_keys_cmd . ' ' . shellescape(joined_lines)
-    call s:send_tmux_command(targeted_cmd)
+    let l:prepared = s:prepare_lines(a:lines)
+    let l:joined_lines = join(l:prepared, "\r") . "\r"
+    let l:send_keys_cmd = s:targeted_tmux_command('send-keys', s:runner_pane)
+    let l:targeted_cmd = l:send_keys_cmd . ' ' . shellescape(l:joined_lines)
+    call s:send_tmux_command(l:targeted_cmd)
 endfunction
 
 function vtr#send_ctrl_id()
@@ -419,20 +419,20 @@ function vtr#send_ctrl_id()
 endfunction
 
 function vtr#send_file_via_vtr(ensure_pane)
-    let runners = s:current_filetype_runners()
-    if has_key(runners, &filetype)
+    let l:runners = s:current_filetype_runners()
+    if has_key(l:runners, &filetype)
         write
-        let runner = runners[&filetype]
-        let local_file_path = expand('%')
-        let run_command = substitute(runner, '{file}', local_file_path, 'g')
-        call s:vtr_send_command(run_command, a:ensure_pane)
+        let l:runner = l:runners[&filetype]
+        let l:local_file_path = expand('%')
+        let l:run_command = substitute(l:runner, '{file}', l:local_file_path, 'g')
+        call s:vtr_send_command(l:run_command, a:ensure_pane)
     else
         echoerr 'Unable to determine runner'
     endif
 endfunction
 
 function s:current_filetype_runners()
-    let default_runners = {
+    let l:default_runners = {
         \ 'elixir': 'elixir {file}',
         \ 'javascript': 'node {file}',
         \ 'python': 'python {file}',
@@ -440,13 +440,13 @@ function s:current_filetype_runners()
         \ 'sh': 'sh {file}'
         \ }
     if exists('g:vtr_filetype_runner_overrides')
-        return extend(copy(default_runners), g:vtr_filetype_runner_overrides)
+        return extend(copy(l:default_runners), g:vtr_filetype_runner_overrides)
     else
-        return default_runners
+        return l:default_runners
     endif
 endfunction
 
 function s:vtr_send_command(command, ...)
-    let ensure_pane = get(a:, 1, 0)
-    call vtr#send_command_to_runner(ensure_pane, a:command)
+    let l:ensure_pane = get(a:, 1, 0)
+    call vtr#send_command_to_runner(l:ensure_pane, a:command)
 endfunction
