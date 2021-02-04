@@ -11,7 +11,7 @@ let g:loaded_vtr = 1
 
 augroup vim_tmux_runner 
     autocmd!
-    autocmd QuitPre * call vtr#kill_runner_pane()
+    autocmd QuitPre * silent! call vtr#kill_runner_pane()
 augroup END
 
 " Init variables
@@ -35,7 +35,7 @@ command -bang -range        VtrSendLinesToRunner <line1>,<line2> call vtr#send_l
 command -bang               VtrSendFile                          call vtr#send_file_via_vtr(<bang>0)
 command -nargs=?            VtrOpenRunner                        call vtr#ensure_runner_pane(<args>)
 command                     VtrKillRunner                        call vtr#kill_runner_pane()
-command -bang               VtrFocusRunner                       call vtr#focus_runner_pane(<bang>!0)
+command -bang               VtrFocusRunner                       call vtr#focus_runner_pane(<bang>0)
 command                     VtrReorientRunner                    call vtr#reorient_runner()
 command                     VtrDetachRunner                      call vtr#detach_runner_pane()
 command                     VtrReattachRunner                    call vtr#reattach_pane()
@@ -44,14 +44,12 @@ command                     VtrFlushCommand                      call vtr#flush_
 command                     VtrSendCtrlD                         call vtr#send_ctrl_id()
 command -bang -nargs=? -bar VtrAttachToPane                      call vtr#attach_to_pane(<f-args>)
 
-nnoremap <Plug>(VtrAttachToPane)        <Cmd>VtrAttachToPane<CR>
 nnoremap <Plug>(VtrReorientRunner)      <Cmd>VtrReorientRunner<CR>
-nnoremap <Plug>(VtrSendCommandToRunner) <Cmd>VtrSendCommandToRunner<CR>
 nnoremap <Plug>(VtrSendLinesToRunner)   <Cmd><line1>,<line2>call vtr#send_lines_to_runner()<CR>
 vnoremap <Plug>(VtrSendLinesToRunner)   <Cmd>VtrSendLinesToRunner<CR>
 nnoremap <Plug>(VtrSendFile)            <Cmd>VtrSendFile<CR>
 nnoremap <Plug>(VtrOpenRunner)          <Cmd>VtrOpenRunner<CR>
-nnoremap <Plug>(VtrKillRunner)          <Cmd>call vtr#kill_runner_pane()<CR>
+nnoremap <Plug>(VtrKillRunner)          <Cmd>VtrKillRunner<CR>
 nnoremap <Plug>(VtrFocusRunner)         <Cmd>VtrFocusRunner<CR>
 nnoremap <Plug>(VtrDetachRunner)        <Cmd>VtrDetachRunner<CR>
 nnoremap <Plug>(VtrClearRunner)         <Cmd>VtrClearRunner<CR>
